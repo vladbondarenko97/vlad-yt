@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+// Functional tests pin the low render tier: CI runners have no GPU, so full-quality shaders crawl on
+// software WebGL and make scroll/click tests time out. The default tier is still exercised by the load test.
+const LOW = '/?quality=low';
+
 // Collect everything the page complains about while a test runs.
 function watchErrors(page) {
   const problems = [];
@@ -29,7 +33,7 @@ test('every stop has a section, and every gauge link points at one', async ({ pa
 });
 
 test('scrolling moves the gauge: Sun at the top, Earth mid-way, Center at the bottom', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(LOW);
   const place = page.locator('[data-gauge="place"]');
   await expect(place).toHaveText('Sun');
   await page.locator('#earth').scrollIntoViewIfNeeded();
@@ -65,7 +69,7 @@ test('without WebGL the page degrades to a readable résumé', async ({ page }) 
 test('reduced motion: page still loads and works', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const problems = watchErrors(page);
-  await page.goto('/');
+  await page.goto(LOW);
   await page.locator('#contact').scrollIntoViewIfNeeded();
   await expect(page.locator('[data-gauge="place"]')).toHaveText('Center');
   expect(problems).toEqual([]);
@@ -73,13 +77,13 @@ test('reduced motion: page still loads and works', async ({ page }) => {
 
 test.describe('contact', () => {
   test('empty form is blocked by validation', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(LOW);
     await page.getByRole('button', { name: 'Open email draft' }).click();
     await expect(page.locator('[data-form-status]')).toBeEmpty();
   });
 
   test('a valid form reports that the email app should open', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(LOW);
     await page.getByLabel('Your name').fill('Ada Lovelace');
     await page.getByLabel('Your email').fill('ada@example.com');
     await page.getByLabel('Message').fill('We should talk.');
@@ -90,7 +94,7 @@ test.describe('contact', () => {
   test('copy button puts the address on the clipboard', async ({ page, context, browserName }) => {
     test.skip(browserName !== 'chromium', 'clipboard permission is Chromium-only');
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-    await page.goto('/');
+    await page.goto(LOW);
     // Stable selector: the button's accessible name changes to "Copied", so a by-name locator would lose it.
     const copy = page.locator('[data-copy]');
     await copy.click();
@@ -106,7 +110,7 @@ test('résumé PDF is served as a PDF', async ({ request }) => {
 });
 
 test('no serious accessibility violations (axe, WCAG A/AA)', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(LOW);
   await page.waitForLoadState('networkidle');
   const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
   const serious = violations.filter((v) => ['serious', 'critical'].includes(v.impact));
