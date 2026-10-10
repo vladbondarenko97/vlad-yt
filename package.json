@@ -1,0 +1,24 @@
+{
+  "name": "vlad-yt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vlad Bondarenko's portfolio: a scroll-driven WebGL journey from the Sun to Earth's inner core.",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/main.js --bundle --minify --format=iife --target=es2020 --outfile=assets/js/app.js",
+    "watch": "esbuild src/main.js --bundle --format=iife --target=es2020 --sourcemap --outfile=assets/js/app.js --watch",
+    "serve": "python3 -m http.server 8080",
+    "earth-mask": "node tools/land-to-geojson.mjs && python3 tools/make_earth_mask.py",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@playwright/test": "^1.64.0",
+    "esbuild": "^0.28.2",
+    "three": "^0.186.1",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  }
+}

@@ -1,0 +1,340 @@
+/* Layout: one narrow logbook column on the left over a full-screen 3D scene whose
+   subject sits right of centre; a fixed instrument rail on the right edge is the only
+   chrome. On narrow screens the subject moves to the top and the rail becomes a bar. */
+:root {
+  color-scheme: dark;
+
+  /* Colour: space black, warm paper-white text, and an accent that the script moves
+     from solar gold through ocean blue to core white as the journey goes on. */
+  --void: #030408;
+  --ink: #f4f0e8;
+  --ink-soft: #c9c4b9;
+  --ink-faint: #8d897f;
+  --line: rgb(244 240 232 / 0.18);
+  --plate: rgb(6 7 12 / 0.62);
+  --accent: #ffb94a;
+  --scrim: 0.55;
+
+  /* Type: Fraunces carries the headlines, Schibsted Grotesk everything else. */
+  --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --text: "Schibsted Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.3125rem;
+  --step-2: clamp(2rem, 1.2rem + 3vw, 3.25rem);
+  --step-3: clamp(3.25rem, 1.2rem + 8.4vw, 7.75rem);
+
+  --gutter: clamp(1.125rem, 6.5vw, 6.5rem);
+  --rail: 15rem;
+}
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("../fonts/fraunces-latin-opsz-normal.woff2") format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("../fonts/schibsted-grotesk-latin-wght-normal.woff2") format("woff2");
+  font-weight: 400 900; font-style: normal; font-display: swap;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+.skip {
+  position: fixed; left: 1rem; top: -4rem; z-index: 20;
+  padding: 0.6rem 1rem; background: var(--ink); color: var(--void); text-decoration: none;
+}
+.skip:focus { top: 1rem; }
+
+/* ---- The scene and its scrim ------------------------------------------- */
+#space {
+  /* Sized to the large viewport (toolbars hidden) so the canvas keeps one size while
+     a phone browser's toolbar slides in and out during scrolling. */
+  position: fixed; top: 0; left: 0; z-index: 0;
+  width: 100%; height: 100vh; height: 100lvh; display: block;
+  opacity: 0; transition: opacity 1.4s ease;
+}
+#space.is-ready { opacity: 1; }
+
+.scrim {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgb(3 4 8 / var(--scrim)) 0%,
+    rgb(3 4 8 / calc(var(--scrim) * 0.94)) 40%,
+    rgb(3 4 8 / 0) 72%
+  );
+}
+
+/* Without WebGL the page is still a complete résumé on a quiet gradient. */
+.no-webgl #space { display: none; }
+.no-webgl body,
+.no-webgl { background: radial-gradient(120% 80% at 80% 0%, #3a1c05 0%, #0a0a12 45%, var(--void) 100%) fixed; }
+
+/* ---- Top bar ------------------------------------------------------------- */
+.topbar {
+  position: fixed; inset: 0 0 auto 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: calc(env(safe-area-inset-top, 0px) + 1.1rem) var(--gutter) 1.1rem;
+  font-size: var(--step--1);
+  background: linear-gradient(rgb(3 4 8 / 0.94) 20%, rgb(3 4 8 / 0));
+}
+.brand { font-family: var(--display); font-size: 1.125rem; font-weight: 500; text-decoration: none; letter-spacing: -0.01em; }
+.topbar nav { display: flex; align-items: center; gap: clamp(0.9rem, 2.2vw, 1.75rem); }
+.topbar nav a { text-decoration: none; color: var(--ink-soft); }
+.topbar nav a:hover { color: var(--ink); }
+.topbar nav .pill {
+  color: var(--ink); padding: 0.4rem 0.9rem;
+  border: 1px solid var(--line); border-radius: 999px;
+}
+.topbar nav .pill:hover { border-color: var(--accent); }
+
+/* ---- Sections ------------------------------------------------------------ */
+main { position: relative; z-index: 2; }
+
+.stop {
+  min-height: 190vh;
+  padding: 21vh var(--gutter) 0;
+}
+.stop.hero { padding-top: 24vh; }
+.stop.last { min-height: 100vh; padding-bottom: 6rem; }
+
+.column {
+  max-width: 35rem;
+  text-shadow: 0 1px 22px rgb(0 0 0 / 0.75);
+}
+.column.wide { max-width: 38rem; }
+.column > * { margin-block: 0; }
+.column > * + * { margin-top: 1.15rem; }
+
+h1, h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+h1 { font-size: var(--step-3); line-height: 0.94; letter-spacing: -0.035em; }
+h2 { font-size: var(--step-2); line-height: 1.04; }
+h3 { font-family: var(--text); font-size: var(--step-1); font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
+
+.lede {
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 1rem + 1.2vw, 1.75rem);
+  font-weight: 350;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  margin-top: 1.6rem !important;
+}
+.note { color: var(--ink-soft); max-width: 31rem; }
+
+.place {
+  color: var(--accent);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.place + h2 { margin-top: 0.55rem; }
+.role { color: var(--ink-soft); font-size: var(--step--1); font-weight: 500; }
+h2 + .role { margin-top: 0.8rem; }
+
+.column ul:not(.links) { list-style: none; padding: 0; display: grid; gap: 0.8rem; }
+.column ul:not(.links) > li { position: relative; padding-left: 1.4rem; }
+.column ul:not(.links) > li::before {
+  content: ""; position: absolute; left: 0; top: 0.78em;
+  width: 0.7rem; height: 1px; background: var(--accent);
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem !important; }
+.button {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.8rem 1.35rem;
+  font: inherit; font-size: var(--step--1); font-weight: 600; letter-spacing: 0.005em;
+  color: var(--void); background: var(--accent);
+  border: 1px solid var(--accent); border-radius: 999px;
+  text-decoration: none; text-shadow: none; cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.button:hover { transform: translateY(-1px); }
+.button.quiet { color: var(--ink); background: rgb(6 7 12 / 0.35); border-color: var(--line); }
+.button.quiet:hover { border-color: var(--accent); }
+
+/* Facts under the About text: a ruled list, not cards. */
+.facts { margin-top: 1.9rem !important; border-top: 1px solid var(--line); }
+.facts > div {
+  display: grid; grid-template-columns: minmax(0, 12.5rem) minmax(0, 1fr); gap: 1rem;
+  padding-block: 0.7rem; border-bottom: 1px solid var(--line);
+}
+.facts dt { font-weight: 600; }
+.facts dd { margin: 0; color: var(--ink-soft); }
+
+.skills { margin-top: 1.6rem !important; display: grid; gap: 1.05rem; }
+.skills dt { font-size: var(--step--1); font-weight: 600; color: var(--accent); }
+.skills dd { margin: 0.1rem 0 0; }
+
+/* Projects are the two things on the page that are objects in their own right. */
+.project {
+  margin-top: 1.6rem !important;
+  padding: clamp(1.15rem, 3vw, 1.7rem);
+  background: var(--plate);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  text-shadow: none;
+}
+.project > * { margin-block: 0; }
+.project > * + * { margin-top: 0.95rem; }
+.project h3 { font-family: var(--display); font-weight: 450; font-size: 1.6rem; letter-spacing: -0.015em; }
+.project .kind { margin-top: 0.3rem; color: var(--ink-soft); font-size: var(--step--1); }
+.project ul { font-size: 1rem; }
+
+.figures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; padding-top: 0.95rem; border-top: 1px solid var(--line); }
+.figures dt { font-family: var(--display); font-size: 1.7rem; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--accent); }
+.figures dd { margin: 0.2rem 0 0; font-size: var(--step--1); color: var(--ink-soft); }
+
+.textlink { display: inline-block; font-size: var(--step--1); font-weight: 600; text-underline-offset: 0.25em; text-decoration-color: var(--accent); }
+.textlink:hover { color: var(--accent); }
+
+.roles { margin-top: 1.5rem !important; display: grid; gap: 1.5rem; }
+.roles p { margin: 0.3rem 0 0; }
+
+/* ---- Contact -------------------------------------------------------------- */
+.contact { margin-top: 1.8rem !important; display: grid; gap: 1rem; text-shadow: none; }
+.field { display: grid; gap: 0.35rem; }
+.field label { font-size: var(--step--1); font-weight: 600; }
+.field input,
+.field textarea {
+  width: 100%; padding: 0.75rem 0.85rem;
+  font: inherit; color: var(--ink);
+  background: rgb(6 7 12 / 0.66);
+  border: 1px solid var(--line); border-radius: 4px;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.field textarea { resize: vertical; min-height: 7rem; }
+.field input:focus-visible,
+.field textarea:focus-visible { outline-offset: 0; border-color: var(--accent); }
+.contact .button { justify-self: start; }
+.form-status { margin: 0; min-height: 1.5em; font-size: var(--step--1); color: var(--ink-soft); }
+
+.direct { font-size: var(--step--1); display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
+.address { font-weight: 600; font-size: var(--step-0); overflow-wrap: anywhere; }
+.copy {
+  font: inherit; font-size: var(--step--1); color: var(--ink);
+  padding: 0.3rem 0.8rem; background: rgb(6 7 12 / 0.5);
+  border: 1px solid var(--line); border-radius: 999px; cursor: pointer;
+}
+.copy:hover { border-color: var(--accent); }
+
+.links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-weight: 600; }
+.links a { text-underline-offset: 0.25em; text-decoration-color: var(--accent); }
+.links a:hover { color: var(--accent); }
+
+.colophon { margin-top: 3.5rem !important; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: var(--step--1); color: var(--ink-faint); }
+.colophon p { margin: 0 0 0.5rem; }
+
+/* ---- The gauge ------------------------------------------------------------ */
+.gauge {
+  position: fixed; z-index: 4;
+  right: clamp(1rem, 2.2vw, 2.25rem); top: 50%; transform: translateY(-50%);
+  width: var(--rail);
+  padding: 1.1rem 1.15rem 0.9rem;
+  font-size: 0.8125rem; line-height: 1.35;
+  /* The one instrument on the page gets a housing so it reads over a star or a core. */
+  background: rgb(4 5 9 / 0.6);
+  border: 1px solid var(--line); border-radius: 8px;
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.readout { margin: 0 0 0.9rem; padding-bottom: 0.9rem; border-bottom: 1px solid var(--line); display: grid; gap: 0.15rem; }
+.readout-place { font-family: var(--display); font-size: 1.5rem; line-height: 1.1; color: var(--accent); }
+.readout-line { color: var(--ink-soft); }
+
+.stops { list-style: none; margin: 0; padding: 0; display: grid; }
+.stops a {
+  position: relative; display: block; padding: 0.34rem 0 0.34rem 1.25rem;
+  text-decoration: none; color: var(--ink-faint);
+  transition: color 0.2s ease;
+}
+.stops a span { display: block; font-size: 0.6875rem; letter-spacing: 0.02em; opacity: 0.85; }
+/* The rail itself: a line with a tick per stop, filled down to the current one. */
+.stops a::before {
+  content: ""; position: absolute; left: 3px; top: 0; bottom: 0; width: 1px; background: var(--line);
+}
+.stops a::after {
+  content: ""; position: absolute; left: 0; top: 0.72rem; width: 7px; height: 7px;
+  border-radius: 50%; background: var(--void); border: 1px solid var(--ink-faint);
+}
+.stops a:hover { color: var(--ink); }
+.stops .is-passed a { color: var(--ink-soft); }
+.stops .is-passed a::before { background: var(--accent); }
+.stops .is-passed a::after { background: var(--accent); border-color: var(--accent); }
+.stops .is-active a { color: var(--ink); }
+.stops .is-active a::after { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgb(255 255 255 / 0.12); }
+
+/* ---- Narrow screens ------------------------------------------------------- */
+@media (max-width: 1100px) {
+  /* Less room beside the text, so the scrim reaches further across the scene. */
+  .scrim {
+    background: linear-gradient(
+      90deg,
+      rgb(3 4 8 / calc(var(--scrim) + 0.1)) 0%,
+      rgb(3 4 8 / var(--scrim)) 56%,
+      rgb(3 4 8 / 0) 96%
+    );
+  }
+  /* The rail collapses to a readout bar pinned to the bottom edge. */
+  .gauge {
+    inset: auto 0 0 0; top: auto; transform: none; width: auto;
+    padding: 0.6rem var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 0.6rem);
+    border: 0; border-radius: 0; -webkit-backdrop-filter: none; backdrop-filter: none;
+    background: linear-gradient(rgb(3 4 8 / 0), rgb(3 4 8 / 0.9) 45%);
+  }
+  .stops { display: none; }
+  .readout { margin: 0; padding: 0; border: 0; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 0.75rem; }
+  .readout-place { font-size: 1.1rem; }
+  .readout-line:last-child { text-align: right; }
+  .stop.last { padding-bottom: 7rem; }
+}
+
+@media (max-width: 760px) {
+  .topbar nav a:not(.pill) { display: none; }
+  .scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(3 4 8 / calc(var(--scrim) * 0.35)) 0%,
+      rgb(3 4 8 / calc(var(--scrim) * 0.95)) 46%,
+      rgb(3 4 8 / var(--scrim)) 100%
+    );
+  }
+  .stop { min-height: 175vh; padding-top: 47vh; }
+  .stop.hero { padding-top: 46vh; }
+  .facts > div { grid-template-columns: 1fr; gap: 0.1rem; }
+  .figures dt { font-size: 1.35rem; }
+  .readout { grid-template-columns: auto 1fr; }
+  .readout-line:last-child { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  #space { transition: none; }
+  .button { transition: none; }
+}
