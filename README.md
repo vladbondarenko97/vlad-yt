@@ -1,5 +1,15 @@
 # vlad.yt
 
+[![tests](https://github.com/vladbondarenko97/vlad-yt/actions/workflows/test.yml/badge.svg)](https://github.com/vladbondarenko97/vlad-yt/actions/workflows/test.yml)
+[![live](https://img.shields.io/badge/live-vlad.yt-f2b84b)](https://vlad.yt)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+[![Scrolling from the Sun to the center of the Earth](docs/demo.gif)](https://vlad.yt)
+
+**Live: [vlad.yt](https://vlad.yt)**. I'm a QA automation engineer and SDET, so this portfolio
+ships with its own test suite: 11 Playwright tests on desktop and phone, axe accessibility checks,
+a no-WebGL fallback test and CI on every push. See [Tests](#tests).
+
 Vlad Bondarenko's portfolio: one page that starts at the Sun and ends at the center of the
 Earth. Scrolling flies a camera past Mercury and Venus to Earth, opens the planet, and
 descends through the crust, mantle and core. The résumé is laid out along the way, and
@@ -96,7 +106,7 @@ src/
     scroll.js        scroll position → journey position
     gauge.js         live distance, depth and temperature readout
     contact.js       mailto form and copy-address button
-tools/               scripts that regenerate the Earth land mask
+tools/               scripts that regenerate the Earth land mask; record-demo.mjs makes docs/demo.gif
 ```
 
 - **Everything is drawn by shaders.** The Sun, the planets, the clouds and the lava are
