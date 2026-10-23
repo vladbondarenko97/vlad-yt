@@ -40,12 +40,19 @@ jobs:
           else echo "::notice::Deploy skipped: DEPLOY_SSH_KEY / DEPLOY_KNOWN_HOSTS secrets are not set (run infra/ansible/scripts/setup-vlad-yt-deploy.sh)"; echo "enabled=false" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/checkout@v4
         if: steps.gate.outputs.enabled == 'true'
-      - name: Upload index.html and assets/ (the server key can only run rrsync inside /var/www/vlad.yt)
+      - name: Write the deploy key
         if: steps.gate.outputs.enabled == 'true'
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+      - name: Which key is this? (fingerprint only; compare with the server's authorized_keys entry)
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          ssh-keygen -y -f ~/.ssh/deploy_key | ssh-keygen -lf - || echo "::error::the DEPLOY_SSH_KEY secret is not a valid private key"
+      - name: Upload index.html and assets/ (the server key can only run rrsync inside /var/www/vlad.yt)
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
           # no --delete: the docroot also holds other things (admin/, game/, ...) that must survive a deploy
           rsync -rlt --chmod=D755,F644 --no-o --no-g --exclude='._*' --exclude='.DS_Store' --itemize-changes \
             -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" index.html assets root@vlad.yt:/
