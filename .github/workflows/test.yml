@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - name: Committed bundle must equal a fresh build (what deploys is what was tested)
         run: npm run build && git diff --exit-code -- assets/js/app.js
       - run: npx playwright install --with-deps chromium
       - run: npm test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
@@ -38,7 +38,7 @@ jobs:
         run: |
           if [ -n "$DEPLOY_SSH_KEY" ] && [ -n "$DEPLOY_KNOWN_HOSTS" ]; then echo "enabled=true" >> "$GITHUB_OUTPUT"
           else echo "::notice::Deploy skipped: DEPLOY_SSH_KEY / DEPLOY_KNOWN_HOSTS secrets are not set (run infra/ansible/scripts/setup-vlad-yt-deploy.sh)"; echo "enabled=false" >> "$GITHUB_OUTPUT"; fi
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: steps.gate.outputs.enabled == 'true'
       - name: Write the deploy key
         if: steps.gate.outputs.enabled == 'true'
