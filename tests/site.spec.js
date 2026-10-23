@@ -76,6 +76,9 @@ test('reduced motion: page still loads and works', async ({ page }) => {
 });
 
 test.describe('contact', () => {
+  // On a GPU-less runner the scene renders in software and each fill/click takes 5-7 s, so five steps
+  // overrun the default 30 s (seen in CI: 30.8 s). The form isn't slow; the page around it is.
+  test.describe.configure({ timeout: 90_000 });
   test('empty form is blocked by validation', async ({ page }) => {
     await page.goto(LOW);
     await page.getByRole('button', { name: 'Open email draft' }).click();
