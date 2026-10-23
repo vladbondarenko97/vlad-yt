@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vlad Bondarenko – Résumé</title>
+<!-- Source of assets/Vlad_Bondarenko_Resume.pdf. Rebuild with: npm run resume -->
+<style>
+  @font-face { font-family: "Schibsted Grotesk"; src: url("../assets/fonts/schibsted-grotesk-latin-wght-normal.woff2") format("woff2"); font-weight: 400 900; }
+  @page { size: Letter; margin: 0.5in 0.6in 0.55in; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; font-size: 9.3pt; line-height: 1.32; color: #16181d; }
+  a { color: #1f4e8c; text-decoration: none; }
+  h1 { font-size: 22pt; line-height: 1; margin: 0 0 4pt; font-weight: 800; }
+  .headline { font-weight: 700; font-size: 10pt; margin: 0 0 3pt; }
+  .contact { margin: 0; color: #3a3f47; }
+  .summary { margin: 7pt 0 0; }
+  h2 { break-after: avoid; font-size: 11.5pt; font-weight: 800; margin: 9pt 0 3pt; padding-bottom: 2pt; border-bottom: 1.2pt solid #b8860b; }
+  h3 { font-size: 9.8pt; font-weight: 700; margin: 5.5pt 0 0; break-after: avoid; }
+  .meta { break-after: avoid; margin: 0.5pt 0 1.5pt; font-size: 8.8pt; color: #4a505a; }
+  ul { margin: 2pt 0 0; padding-left: 12pt; }
+  li { margin: 1pt 0; }
+  .skills p { margin: 2pt 0; }
+    b { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>Vlad Bondarenko</h1>
+<p class="headline">SDET | AI Quality Engineer | LLM &amp; Agent Evaluation | Test Automation</p>
+<p class="contact">St. Louis, MO • (314) 737-7109 • <a href="mailto:contactvlad1k@gmail.com">contactvlad1k@gmail.com</a></p>
+<p class="contact"><a href="https://vlad.yt">vlad.yt</a> • <a href="https://github.com/vladbondarenko97">github.com/vladbondarenko97</a> • <a href="https://www.linkedin.com/in/vladbondarenko97/">linkedin.com/in/vladbondarenko97</a></p>
+
+<p class="summary">SDET and AI quality engineer with 6+ years automating and verifying regulated software: ophthalmic surgical systems at Bausch + Lomb, mortgage platforms at U.S. Bank, and healthcare systems at Express Scripts and Centene. Builds test automation from scratch and applies the same discipline to AI agents: measurable reliability, root-cause analysis, and guardrails enforced in code and CI rather than in prompts. Completing an A.A.S. in Cybersecurity.</p>
+
+<h2>Technical Skills</h2>
+<div class="skills">
+  <p><b>Test automation:</b> Playwright, Cypress, Selenium, Cucumber/BDD, Ranorex, Karate DSL, Postman, axe-core, Python unittest, pytest, node:test</p>
+  <p><b>Languages:</b> JavaScript, Python, Java, C#, C++, SQL; Kotlin, Swift, Objective-C, PHP</p>
+  <p><b>AI and agent engineering:</b> Claude Code, LLM orchestration, agent evaluation and eval gates, failure analysis, tool-use agents, guardrails, prompt design, AWS Bedrock</p>
+  <p><b>Engineering and DevOps:</b> GitHub Actions, Jenkins, Git, Docker, AWS, Cloud Foundry, Node.js, Flask, SQLite, CMake</p>
+  <p><b>Quality and regulated systems:</b> FDA medical devices, HIPAA, mortgage lending, WCAG; regression, integration, E2E, API, UAT, hardware/software verification, TDD/BDD; JIRA, Zephyr, IBM Rational RequisitePro</p>
+</div>
+
+<h2>Projects and Open Source (2026)</h2>
+
+<div class="entry">
+<h3>Take the Wheel: AI browser agent</h3>
+<p class="meta">Personal project • JavaScript, Node.js, Chrome extension, Claude • <a href="https://github.com/vladbondarenko97/take-the-wheel">github.com/vladbondarenko97/take-the-wheel</a></p>
+<ul>
+  <li>Built a Chrome side panel and Node.js runner that let Claude drive a live, logged-in browser tab, with streamed step events, resumable sessions, human-in-the-loop handoffs and a stop control.</li>
+  <li>Found that the agent's tool allowlist was not the real security boundary (it exposed the user's GitHub login and local files) and replaced it with a fail-closed guard on every command, covered by 67 test cases in CI on Node 20, 22 and 24 and a live end-to-end check across Haiku, Sonnet and Opus.</li>
+  <li>Caught a false-completion defect (reported 25 of 25 done; 23 verified) and redesigned page reading to reach a verified 25 of 25 in 4 turns instead of 29, cutting cost per task from $0.33 to $0.034.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>AnyPS5: open-source macOS compatibility</h3>
+<p class="meta">Open-source contribution • C++, Python, CMake, macOS, systems debugging • Merged PRs <a href="https://github.com/mugurc/AnyPS5/pull/7">#7</a> and <a href="https://github.com/mugurc/AnyPS5/pull/8">#8</a></p>
+<ul>
+  <li>Diagnosed why a PS5 title failed on macOS hosts: it stopped at load on two missing libkernel imports, then crashed on its first C++ exception when the unwinder hit an unimplemented call. Implemented kqueue/kevent and <code>sceKernelGetModuleInfoFromAddr</code> for macOS.</li>
+  <li>Added guest regression tests and macOS unwind fixtures, and validated against the full 712-test suite before maintainer review and merge.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>Market Terminal: market data pipeline and dashboard</h3>
+<p class="meta">Personal project • Python, SQLite, Flask • <a href="https://github.com/vladbondarenko97/market-terminal">github.com/vladbondarenko97/market-terminal</a></p>
+<ul>
+  <li>Built a pipeline that collects market data from about a dozen sources, stores every raw response (SHA-256 deduplicated) and renders dashboards, reports and a Flask API from one immutable snapshot per run.</li>
+  <li>Designed for testability: 400+ offline tests (unit, API routes and an offline end-to-end run); any network call in a test fails it; CI re-runs the full suite with the clock 400 days ahead, which surfaced three date-dependent bugs.</li>
+  <li>Root-caused data defects to guarded fixes, including a chart where 69 of 325 rows used a frozen benchmark price; a failed source is reported as “missing” with a reason, never a placeholder.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>vlad.yt: portfolio site with its own test suite</h3>
+<p class="meta">Personal project • JavaScript, three.js, Playwright, GitHub Actions • <a href="https://vlad.yt">vlad.yt</a></p>
+<ul>
+  <li>26 Playwright tests on desktop and phone, including axe WCAG A/AA, a no-WebGL fallback and structured-data checks; CI deploys only when every test passes and the committed bundle matches a fresh build, then smoke-tests the live site.</li>
+</ul>
+</div>
+
+<h2>Experience</h2>
+
+<div class="entry">
+<h3>Software Verification Engineer – Research &amp; Development</h3>
+<p class="meta">Bausch + Lomb (contract) | St. Louis, MO | Mar 2026–Present</p>
+<ul>
+  <li>Author verification protocols and dry-run procedures for FDA-regulated ophthalmic surgical systems (a next-generation platform and Stellaris), covering software, hardware integration and requirements testing.</li>
+  <li>Audited legacy firmware protocols against resolved UI defects; retired obsolete requirements and removed dozens of invalid test cases before migration into IBM Rational RequisitePro.</li>
+  <li>Isolated DMS configurations so verification can run remotely, reducing dependence on physical lab access.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>Career Break: Full-Time Cybersecurity Studies</h3>
+<p class="meta">St. Louis Community College | Nov 2022–Mar 2026</p>
+<ul>
+  <li>Studied cybersecurity full time toward an A.A.S. (in progress): ethical hacking, network defense, secure software design and CompTIA Security+ preparation.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>Business Technology Analyst (QA Analyst)</h3>
+<p class="meta">U.S. Bank (contract) | St. Louis, MO | Oct 2019–Nov 2022</p>
+<ul>
+  <li>Planned and ran end-to-end, integration and regression testing across the Black Knight, Seller Digital and Empower mortgage platforms (Conventional, FHA, VA and HFA loans).</li>
+  <li>Turned BRDs, FRDs and user stories into test plans and test cases in JIRA and Zephyr; owned scope, timelines, defect management and go/no-go input for multiple initiatives.</li>
+  <li>Maintained critical test data (Fannie Mae casefile IDs, Freddie Mac key IDs, credit reports, XML artifacts) so environments stayed accurate and audit-ready.</li>
+  <li>Mentored and onboarded QA testers; wrote defect tickets with root-cause detail and supported post-production triage.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>QA Automation Engineer</h3>
+<p class="meta">Centene Corporation | St. Louis, MO | Oct 2018–Apr 2019</p>
+<ul>
+  <li>Built UAT and end-to-end automated test scripts from scratch with Ranorex (C#) and Cypress (JavaScript).</li>
+  <li>Helped establish a CI/CD pipeline in a TDD team; contributed to solution design in JavaScript, Java and C#.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>QA Automation Engineer II</h3>
+<p class="meta">Multiply / Answers.com (contract) | St. Louis, MO | Jul 2018–Sep 2018</p>
+<ul>
+  <li>Wrote the test plan and built a Cypress and JavaScript end-to-end suite from scratch for a WordPress platform, cutting manual regression effort by about 50%.</li>
+  <li>Validated back-end data with SQL, tested WCAG accessibility and maintained a Docker-based QA environment.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>QA Engineer</h3>
+<p class="meta">Express Scripts via WWT Asynchrony (contract) | St. Louis, MO | Nov 2017–Jul 2018</p>
+<ul>
+  <li>Tested a prescription portal handling PII and PHI against HIPAA requirements; automated unit, API and end-to-end tests with Selenium, Cucumber, Java and Postman.</li>
+  <li>Worked with Jenkins, AWS and Cloud Foundry; completed WWT Asynchrony's Agile and TDD certification.</li>
+</ul>
+</div>
+
+<div class="entry">
+<h3>Mobile Cloud Developer Co-op</h3>
+<p class="meta">Emerson | St. Louis, MO | Dec 2016–Nov 2017 (began as Sensi Customer Advocate, May–Dec 2016)</p>
+<ul>
+  <li>Developed Android and iOS features for the Sensi smart Wi-Fi thermostat apps (Java, Kotlin, Swift, Objective-C) using pair programming and TDD; wrote unit and user-acceptance tests.</li>
+  <li>Ran exploratory hardware and software testing on the thermostat ahead of its public launch; integrated Salesforce SOS live-agent video support for 100,000+ app users.</li>
+</ul>
+</div>
+
+<h2>Education</h2>
+<p style="margin:2pt 0"><b>A.A.S., Cybersecurity (in progress):</b> St. Louis Community College, 2022–Present</p>
+<p style="margin:2pt 0"><b>Associate Degree in General Education:</b> St. Louis Community College Meramec, 2016–2018 • GPA 3.8, Honor Society</p>
+
+</body>
+</html>

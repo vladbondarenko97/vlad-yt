@@ -9,7 +9,8 @@
     "watch": "esbuild src/main.js --bundle --format=iife --target=es2020 --sourcemap --outfile=assets/js/app.js --watch",
     "serve": "python3 -m http.server 8080",
     "earth-mask": "node tools/land-to-geojson.mjs && python3 tools/make_earth_mask.py",
-    "test": "playwright test"
+    "test": "playwright test",
+    "resume": "node tools/build-resume.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
