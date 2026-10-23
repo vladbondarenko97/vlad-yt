@@ -12,6 +12,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      - name: Committed bundle must equal a fresh build (what deploys is what was tested)
+        run: npm run build && git diff --exit-code -- assets/js/app.js
       - run: npx playwright install --with-deps chromium
       - run: npm test
       - uses: actions/upload-artifact@v4
@@ -21,3 +23,32 @@ jobs:
           path: |
             playwright-report/
             test-results/
+
+  deploy:
+    needs: e2e
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency: { group: deploy-vlad-yt, cancel-in-progress: false }
+    env:
+      DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+      DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+    steps:
+      - id: gate
+        run: |
+          if [ -n "$DEPLOY_SSH_KEY" ] && [ -n "$DEPLOY_KNOWN_HOSTS" ]; then echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else echo "::notice::Deploy skipped: DEPLOY_SSH_KEY / DEPLOY_KNOWN_HOSTS secrets are not set (run infra/ansible/scripts/setup-vlad-yt-deploy.sh)"; echo "enabled=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.enabled == 'true'
+      - name: Upload index.html and assets/ (the server key can only run rrsync inside /var/www/vlad.yt)
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          # no --delete: the docroot also holds other things (admin/, game/, ...) that must survive a deploy
+          rsync -rlt --chmod=D755,F644 --no-o --no-g --exclude='._*' --exclude='.DS_Store' --itemize-changes \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" index.html assets root@vlad.yt:/
+      - name: Smoke test the live site
+        if: steps.gate.outputs.enabled == 'true'
+        run: curl -fsS https://vlad.yt/ | grep -q "Vlad Bondarenko"
