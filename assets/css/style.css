@@ -349,3 +349,36 @@ h2 + .role { margin-top: 0.8rem; }
   box-shadow: 0 8px 32px rgb(0 0 0 / 0.6);
   object-fit: cover;
 }
+
+/* ---- Engineering page: a plain, printable document, no scene ---------------- */
+body.doc { background: radial-gradient(120% 60% at 80% 0%, #2a1505 0%, #0a0a12 40%, var(--void) 100%) fixed; }
+.doc-main { position: relative; max-width: 54rem; margin: 0 auto; padding: 8rem var(--gutter) 5rem; }
+.doc-main > * { margin-block: 0; }
+.doc-main > * + * { margin-top: 1.15rem; }
+.doc-main section { margin-top: 4rem; }
+.doc-main section > * { margin-block: 0; }
+.doc-main section > * + * { margin-top: 1rem; }
+.doc-main h3 { margin-top: 2rem !important; }
+.doc-main p, .doc-main li { max-width: 46rem; }
+.doc-main ul { padding: 0; list-style: none; display: grid; gap: 0.8rem; }
+.doc-main ul > li { position: relative; padding-left: 1.4rem; }
+.doc-main ul > li::before { content: ""; position: absolute; left: 0; top: 0.78em; width: 0.7rem; height: 1px; background: var(--accent); }
+.doc-main a:not(.button) { text-underline-offset: 0.2em; text-decoration-color: var(--accent); }
+.doc-main a:not(.button):hover { color: var(--accent); }
+.doc-main code { font-size: 0.9em; padding: 0.05em 0.3em; border-radius: 3px; background: rgb(244 240 232 / 0.08); }
+.toc ol { margin: 0; padding: 1rem 1.2rem 1rem 2.4rem; display: grid; gap: 0.3rem; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+.doc-main table { width: 100%; border-collapse: collapse; font-size: 0.95rem; line-height: 1.5; }
+.doc-main th, .doc-main td { padding: 0.75rem 0.9rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.doc-main tbody tr:last-child > * { border-bottom: 0; }
+.doc-main thead th { font-size: var(--step--1); color: var(--accent); font-weight: 600; white-space: nowrap; }
+.doc-main tbody th { font-weight: 600; white-space: nowrap; }
+@media (max-width: 760px) {
+  .doc-main { padding-top: 6rem; }
+  .doc-main table { min-width: 38rem; }
+}
+@media print {
+  body.doc { background: #fff; color: #000; }
+  .doc .topbar { position: static; background: none; }
+  .table-wrap, .toc ol { background: none; }
+}

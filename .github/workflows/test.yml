@@ -50,14 +50,15 @@ jobs:
         if: steps.gate.outputs.enabled == 'true'
         run: |
           ssh-keygen -y -f ~/.ssh/deploy_key | ssh-keygen -lf - || echo "::error::the DEPLOY_SSH_KEY secret is not a valid private key"
-      - name: Upload index.html, robots.txt, sitemap.xml and assets/ (the server key can only run rrsync inside /var/www/vlad.yt)
+      - name: Upload index.html, robots.txt, sitemap.xml, engineering/ and assets/ (the server key can only run rrsync inside /var/www/vlad.yt)
         if: steps.gate.outputs.enabled == 'true'
         run: |
           # no --delete: the docroot also holds other things (admin/, game/, ...) that must survive a deploy
           rsync -rlt --chmod=D755,F644 --no-o --no-g --exclude='._*' --exclude='.DS_Store' --itemize-changes \
-            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" index.html robots.txt sitemap.xml assets root@vlad.yt:/
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" index.html robots.txt sitemap.xml engineering assets root@vlad.yt:/
       - name: Smoke test the live site
         if: steps.gate.outputs.enabled == 'true'
         run: |
           curl -fsS https://vlad.yt/ -o page.html
           grep -q "Vlad Bondarenko" page.html
+          curl -fsS https://vlad.yt/engineering/ | grep -q "How I engineer"

@@ -7,7 +7,7 @@
 [![Scrolling from the Sun to the center of the Earth](docs/demo.gif)](https://vlad.yt)
 
 **Live: [vlad.yt](https://vlad.yt)**. I'm a QA automation engineer and SDET, so this portfolio
-ships with its own test suite: 11 Playwright tests on desktop and phone, axe accessibility checks,
+ships with its own test suite: 13 Playwright tests on desktop and phone, axe accessibility checks,
 a no-WebGL fallback test and CI on every push. See [Tests](#tests).
 
 Vlad Bondarenko's portfolio: one page that starts at the Sun and ends at the center of the
@@ -74,12 +74,15 @@ npx playwright test --ui   # watch mode with a time-travel debugger
 | Copy button | The address really lands on the clipboard |
 | Résumé link | The PDF is served as `application/pdf` |
 | Accessibility | [axe-core](https://github.com/dequelabs/axe-core) finds no serious WCAG A/AA violations |
+| SEO | The headshot loads, the Person/ProfilePage JSON-LD is valid, and every `sameAs` profile is a `rel="me"` link |
+| Engineering page | `/engineering/` is linked from the home page, loads cleanly and passes axe |
 
 ## Changing the content
 
 | To change | Edit |
 |---|---|
 | Text, links, sections | `index.html` |
+| Engineering evidence page | `engineering/index.html` |
 | Résumé download | replace `assets/Vlad_Bondarenko_Resume.pdf` |
 | Stop names, distances, temperatures, accent colors | `src/data/stops.js` |
 | Camera position at each stop | `src/scene/journey.js` |

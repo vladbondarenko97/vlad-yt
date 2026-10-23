@@ -131,3 +131,18 @@ test('SEO: headshot loads, Person/ProfilePage JSON-LD is valid, profiles are rel
   expect((await request.get(new URL(person.image.url).pathname)).status()).toBe(200);
   for (const url of person.sameAs) await expect(page.locator(`a[rel~="me"][href="${url}"]`)).toHaveCount(1);
 });
+
+test('engineering page: loads cleanly, linked from the home page, no serious a11y violations', async ({ page }) => {
+  const problems = watchErrors(page);
+  await page.goto(LOW);
+  await page.getByRole('link', { name: 'How I engineer' }).click();
+  await expect(page).toHaveURL(/\/engineering\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('How I engineer');
+  for (const id of ['test-strategy', 'design', 'root-causes', 'agents', 'leadership', 'before-ai']) {
+    await expect(page.locator(`#${id} h2`)).toBeVisible();
+  }
+  await page.waitForLoadState('networkidle');
+  expect(problems).toEqual([]);
+  const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+  expect(violations.filter((v) => ['serious', 'critical'].includes(v.impact)).map((v) => v.id)).toEqual([]);
+});

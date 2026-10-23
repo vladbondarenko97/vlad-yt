@@ -89,6 +89,7 @@
   <nav aria-label="Sections">
     <a href="#earth">Projects</a>
     <a href="#crust">Experience</a>
+    <a href="engineering/">Engineering</a>
     <a href="#contact">Contact</a>
     <a class="pill" href="assets/Vlad_Bondarenko_Resume.pdf">Résumé</a>
   </nav>
@@ -127,7 +128,7 @@
       <p class="note">QA automation engineer and SDET in St. Louis, MO. This page starts at the Sun and ends at the center of the Earth, with my work laid out along the way.</p>
       <p class="actions">
         <a class="button" href="#mercury">Start the descent</a>
-        <a class="button quiet" href="assets/Vlad_Bondarenko_Resume.pdf">Read the résumé</a>
+        <a class="button quiet" href="engineering/">How I engineer</a>
       </p>
     </div>
   </section>
@@ -168,30 +169,49 @@
 
       <article class="project">
         <h3>Take the Wheel</h3>
-        <p class="kind">An AI browser agent. AI-assisted personal project in JavaScript and Node.js, built with Claude Code.</p>
+        <p class="kind">An AI browser agent. Personal project in JavaScript and Node.js.</p>
         <ul>
           <li>A Chrome side panel and Node.js runner that let Claude drive a live browser tab, with streamed step events, resumable sessions and a stop control.</li>
-          <li>Safety limits live in code, not prompts: a command allowlist, an isolated workspace, a token-authenticated local runner, budget and turn caps, and a submit lock that opens only when the user's task asks for it.</li>
+          <li>Safety limits live in code, not prompts: a fail-closed guard that checks every command before it runs, an isolated workspace, a token-authenticated local runner, budget and turn caps, and a submit lock that opens only when the user's task asks for it.</li>
+          <li>I found that the tool allowlist was never the real boundary: it let the agent reach the user's GitHub login and local files. The guard replaced it, with 67 test cases in CI across Node 20, 22 and 24.</li>
           <li>I tested the agent like any system under test and caught it reporting 25 of 25 items done when 23 were verified. After I redesigned how it reads a page, it reached a verified 25 of 25.</li>
         </ul>
         <dl class="figures">
           <div><dt>25 of 25</dt><dd>verified, up from 23</dd></div>
-          <div><dt>5 turns</dt><dd>down from 29</dd></div>
-          <div><dt>1/6</dt><dd>of the original cost</dd></div>
+          <div><dt>4 turns</dt><dd>down from 29</dd></div>
+          <div><dt>$0.034</dt><dd>per task, down from $0.33</dd></div>
         </dl>
         <a class="textlink" href="https://github.com/vladbondarenko97/take-the-wheel">Take the Wheel on GitHub</a>
       </article>
 
       <article class="project">
-        <h3>Market Terminal</h3>
-        <p class="kind">A self-hosted market data pipeline and dashboard. AI-assisted personal project in Python, SQLite and Flask.</p>
+        <h3>ReqTrace</h3>
+        <p class="kind">An AI pipeline for regulated engineering, built to be audited. Personal project in Python, on a fully synthetic device spec.</p>
         <ul>
-          <li>Collects market data from nine sources, stores every raw response, and renders dashboards, reports and an API from one immutable snapshot per run.</li>
+          <li>Reads a requirements specification and produces cited findings, a requirement-to-test trace matrix and a draft verification protocol. Every output is stamped for engineer review.</li>
+          <li>Rules that can be code are code. A guardrail drops any finding that cites a requirement that doesn't exist, and reused test steps are copied verbatim, never paraphrased.</li>
+          <li>A cheaper model earns a step only by passing the same eval gate. Three of four local-model routings failed it; the one that passed cut model cost 55%.</li>
+        </ul>
+        <dl class="figures">
+          <div><dt>5 of 5</dt><dd>planted defects caught</dd></div>
+          <div><dt>0</dt><dd>false positives, gated in CI</dd></div>
+          <div><dt>−55%</dt><dd>model cost, same quality</dd></div>
+        </dl>
+        <a class="textlink" href="https://github.com/vladbondarenko97/reqtrace">ReqTrace on GitHub</a>
+      </article>
+
+      <article class="project">
+        <h3>Market Terminal</h3>
+        <p class="kind">A self-hosted market data pipeline and dashboard. Personal project in Python, SQLite and Flask.</p>
+        <ul>
+          <li>Collects market data from about a dozen sources, stores every raw response, and renders dashboards, reports and an API from one immutable snapshot per run.</li>
           <li>Built to be testable: any past run replays offline, and a missing input shows as “missing” with a reason instead of a placeholder number.</li>
-          <li>32 offline unit tests cover idempotent imports, credential safety, bounded retries and parser failures.</li>
+          <li>More than 400 offline tests. Any network call in a test is an error, and CI runs the whole suite a second time with the clock 400 days ahead.</li>
         </ul>
         <a class="textlink" href="https://github.com/vladbondarenko97/market-terminal">Market Terminal on GitHub</a>
       </article>
+
+      <p><a class="textlink" href="engineering/">The design decisions, root causes and test strategy behind these projects</a></p>
     </div>
   </section>
 

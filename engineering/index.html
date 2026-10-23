@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How Vlad Bondarenko Engineers | Test Strategy, Design Decisions, Root Causes</title>
+<meta name="description" content="Evidence from QA automation engineer and SDET Vlad Bondarenko: test strategy, system design decisions, bugs root-caused and guarded, how he runs AI coding agents, and quality leadership. Every claim links to code.">
+<meta name="author" content="Vlad Bondarenko">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://vlad.yt/engineering/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://vlad.yt/engineering/">
+<meta property="og:title" content="How Vlad Bondarenko engineers: the evidence">
+<meta property="og:description" content="Test strategy, design decisions, root causes and how I run AI coding agents. Every claim links to the code.">
+<meta property="og:image" content="https://vlad.yt/assets/img/og.jpg">
+<meta property="og:site_name" content="Vlad Bondarenko">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/fraunces-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://vlad.yt/engineering/#page",
+      "url": "https://vlad.yt/engineering/",
+      "name": "How Vlad Bondarenko engineers",
+      "dateModified": "2026-10-23",
+      "about": { "@id": "https://vlad.yt/#person" },
+      "author": { "@id": "https://vlad.yt/#person" },
+      "isPartOf": { "@id": "https://vlad.yt/#website" },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Vlad Bondarenko", "item": "https://vlad.yt/" },
+          { "@type": "ListItem", "position": 2, "name": "Engineering", "item": "https://vlad.yt/engineering/" }
+        ]
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body class="doc">
+
+<header class="topbar">
+  <a class="brand" href="/">Vlad Bondarenko</a>
+  <nav aria-label="Site">
+    <a href="/#earth">Projects</a>
+    <a href="/#crust">Experience</a>
+    <a href="/#contact">Contact</a>
+    <a class="pill" href="/assets/Vlad_Bondarenko_Resume.pdf">Résumé</a>
+  </nav>
+</header>
+
+<main class="doc-main">
+  <p class="place">Engineering</p>
+  <h1>How I engineer</h1>
+  <p class="lede">The decisions I made, the bugs I traced to their root cause, how I test, and how I keep AI coding agents honest. Every claim links to the code, so you can check it instead of taking my word for it.</p>
+
+  <nav class="toc" aria-label="On this page">
+    <ol>
+      <li><a href="#test-strategy">Test strategy</a></li>
+      <li><a href="#design">Design decisions</a></li>
+      <li><a href="#root-causes">Bugs I root-caused</a></li>
+      <li><a href="#agents">Working with coding agents</a></li>
+      <li><a href="#leadership">Leading quality</a></li>
+      <li><a href="#before-ai">Code from before AI tools</a></li>
+    </ol>
+  </nav>
+
+  <section id="test-strategy">
+    <h2>Test strategy</h2>
+    <p>I start from what would hurt if it broke, and put the cheapest reliable check in front of it. A rule that can be code is code; a judgment that needs a model gets an eval gate with an answer key. Tests run offline and do not depend on today's date, so a red build means a real problem.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Project</th><th scope="col">Tests</th><th scope="col">What they cover</th><th scope="col">Gate in CI</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/market-terminal">Market Terminal</a></th><td>430+</td><td>Unit, Flask route tests, an offline end-to-end run, replay from stored responses. Any network call in a test raises <code>NetworkBlocked</code>.</td><td>The whole suite, then again with the <a href="https://github.com/vladbondarenko97/market-terminal/blob/main/tests/shifted_clock.py">clock 400 days ahead</a>. A daily run catches dependency drift.</td></tr>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/reqtrace">ReqTrace</a></th><td>36</td><td>Parsing, deterministic checks, the citation guardrail, and tests proving the gate fails on a missed defect and on a false positive.</td><td><a href="https://github.com/vladbondarenko97/reqtrace/blob/main/.github/workflows/ci.yml">Eval gate</a>: fails below 5 of 5 planted defects or above 0 false positives. Releases re-run it.</td></tr>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/take-the-wheel">Take the Wheel</a></th><td>16 (67 guard cases)</td><td>The security guard, the Bedrock backend and telemetry. A live end-to-end run checks the guard against Haiku, Sonnet and Opus.</td><td><a href="https://github.com/vladbondarenko97/take-the-wheel/blob/main/test/guard.test.mjs">Guard tests</a> on Node 20, 22 and 24.</td></tr>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/vlad-yt">vlad.yt</a></th><td>26</td><td>13 Playwright tests on desktop and phone: no console errors, axe WCAG A/AA, a no-WebGL fallback, reduced motion, structured data.</td><td>Deploys only if every test passes and the committed bundle equals a fresh build, then smoke-tests the live site.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section id="design">
+    <h2>Design decisions</h2>
+    <p>Each one names what I rejected and why. ReqTrace keeps a full <a href="https://github.com/vladbondarenko97/reqtrace/blob/main/docs/DECISIONS.md">decision log</a>.</p>
+
+    <h3>Take the Wheel: a browser agent</h3>
+    <ul>
+      <li><strong>The security boundary is a deterministic hook, not the tool allowlist.</strong> Claude Code auto-approves read-only commands before it checks <code>--allowedTools</code>, and a wildcard rule let through the user's GitHub CLI and file uploads. <a href="https://github.com/vladbondarenko97/take-the-wheel/blob/main/runner/guard.mjs"><code>guard.mjs</code></a> runs before every command and fails closed.</li>
+      <li><strong>Safety lives in code because the model is not consistent.</strong> In testing, Haiku tried the forbidden commands, and Opus sometimes refused even an authorized test. A check that depends on the model behaving is not a check.</li>
+      <li><strong>Submitting a form is locked in code.</strong> The final submit is refused unless the user's own task asks for it.</li>
+      <li><strong>Each run starts in an empty sandbox</strong> with no connectors or skills, so no stray instructions leak in and every turn costs less.</li>
+    </ul>
+
+    <h3>ReqTrace: AI for regulated engineering</h3>
+    <ul>
+      <li><strong>Anything that can be a rule is a rule.</strong> The model gets a closed four-type taxonomy enforced by the schema, and deterministic checks handle traceability.</li>
+      <li><strong>Reused test steps are copied verbatim, never paraphrased</strong> by the model. In a controlled document, a paraphrase is an unapproved change.</li>
+      <li><strong>The citation guardrail drops and counts, never repairs.</strong> A finding that cites an unknown requirement is removed and reported, not quietly fixed.</li>
+      <li><strong>A cheaper model earns a step only by passing the same gate.</strong> Three of four local-model routings failed and were rejected or redesigned. The one that passed cut model cost 55%.</li>
+      <li><strong>Reproducibility comes from recorded fixtures,</strong> because temperature 0 is not available. The fixture key includes the prompt, so a prompt change cannot replay a stale answer.</li>
+    </ul>
+
+    <h3>Market Terminal: a data pipeline</h3>
+    <ul>
+      <li><strong>Missing is not zero.</strong> A failed source is shown as missing, with the reason. No fallback constants, no carried-forward prices.</li>
+      <li><strong>One immutable snapshot per run;</strong> renderers never fetch. Database triggers block updates and deletes of snapshots.</li>
+      <li><strong>Every network call goes through one gate</strong> that bounds, deduplicates, logs and stores it, and makes no calls in offline runs.</li>
+      <li><strong>Known trade-offs are written down</strong> in <a href="https://github.com/vladbondarenko97/market-terminal/blob/main/docs/known-issues.md">known issues</a>, not hidden.</li>
+    </ul>
+  </section>
+
+  <section id="root-causes">
+    <h2>Bugs I root-caused</h2>
+    <p>The fix is half the job. The other half is the test or guard that stops it from coming back.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Symptom</th><th scope="col">Root cause</th><th scope="col">What stops it returning</th></tr></thead>
+      <tbody>
+        <tr><td>An agent restricted to one CLI still ran <code>pwd</code></td><td>Read-only commands are auto-approved before the allowlist is checked, and the wildcard also admitted the user's GitHub login, file upload and blocked sites</td><td>A fail-closed hook with 67 test cases in CI, plus <a href="https://github.com/vladbondarenko97/take-the-wheel/tree/main/docs/case-study">before-and-after recordings</a></td></tr>
+        <tr><td>The agent reported 25 of 25 done; 23 were</td><td>The way it read the page let it lose track while scrolling</td><td>A page digest and a chained check; it now verifies 25 of 25 in 4 turns instead of 29</td></tr>
+        <tr><td>A price premium chart ranged from −2% to +39%</td><td>69 of 325 rows used a frozen futures price</td><td>Each price paired with the same run's benchmark, with dedicated tests</td></tr>
+        <tr><td>CI failed with no code change</td><td>A test depended on today's date</td><td>Injected clock, and CI re-runs every test 400 days ahead, which found three more</td></tr>
+        <tr><td>The test suite was calling live APIs</td><td>A test replaced one fetcher but not another</td><td><a href="https://github.com/vladbondarenko97/market-terminal/blob/main/tests/support.py">Network access in tests raises an error</a> that wrappers cannot swallow</td></tr>
+        <tr><td>Every Yahoo symbol failed on the live server</td><td>A test run had cached an empty cookie in the shared cache</td><td>Tests use their own cache</td></tr>
+        <tr><td>A prompt edit could replay a stale model answer</td><td>The fixture key hashed the input but not the prompt</td><td>The key includes the prompt; mock mode fails on a stale fixture</td></tr>
+        <tr><td>Intermittent false positives in the eval</td><td>The reviewer was right: my synthetic spec had two real gaps</td><td>Fixed the input, left the answer key alone, and <a href="https://github.com/vladbondarenko97/reqtrace/blob/main/evals/history.md">disclosed it</a>; 5 of 5 with 0 false positives on every run since</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section id="agents">
+    <h2>Working with coding agents</h2>
+    <p>I use Claude Code and other agents to build faster, and I treat their output the way I treat any system under test: it has to prove itself. The root causes above are what that looks like in practice.</p>
+    <ul>
+      <li><strong>One rulebook, enforced by CI.</strong> Market Terminal's <a href="https://github.com/vladbondarenko97/market-terminal/blob/main/AGENTS.md"><code>AGENTS.md</code></a> sets ten hard rules for every agent: never send or publish anything, missing is not zero, tests stay offline. The rules a machine can check are checked in CI, so an agent that breaks one fails the build.</li>
+      <li><strong>Verify, don't accept.</strong> I re-run the tests and the linter myself after delegated work, and <a href="https://github.com/vladbondarenko97/reqtrace/blob/main/docs/DECISIONS.md">the decision log records it</a>.</li>
+      <li><strong>Humans approve.</strong> Every ReqTrace output is stamped <em>Draft, requires engineer review. Not for execution.</em></li>
+      <li><strong>Cost is measured, not guessed.</strong> Every eval run lands in a <a href="https://github.com/vladbondarenko97/reqtrace/blob/main/evals/ledger.jsonl">ledger</a> with its model, cost and result.</li>
+    </ul>
+  </section>
+
+  <section id="leadership">
+    <h2>Leading quality</h2>
+    <ul>
+      <li><strong>U.S. Bank:</strong> owned scope, timelines, defect management and go/no-go input for several mortgage initiatives, and mentored and onboarded new QA testers.</li>
+      <li><strong>Bausch + Lomb:</strong> audited legacy firmware protocols, retired obsolete requirements and removed dozens of invalid test cases before they moved into IBM Rational RequisitePro.</li>
+      <li><strong>Centene:</strong> built UAT and end-to-end automation from scratch in Ranorex and Cypress, and helped establish a CI/CD pipeline.</li>
+      <li><strong>Answers.com:</strong> wrote the test plan and built a Cypress suite from scratch, cutting manual regression effort by about half.</li>
+      <li><strong>Emerson:</strong> ran exploratory hardware and software testing on the Sensi thermostat before its public launch.</li>
+    </ul>
+  </section>
+
+  <section id="before-ai">
+    <h2>Code from before AI tools</h2>
+    <p>I was writing software long before coding assistants existed. These are early projects I built while teaching myself to program.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Project</th><th scope="col">What it is</th><th scope="col">Written</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/search-engine-php">search-engine-php</a></th><td>A complete search engine in PHP</td><td>2013–2015</td></tr>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/search-crawler-php-python">search-crawler-php-python</a></th><td>Its crawler, which ran on a jailbroken iPod and indexed about 4,000 sites a night</td><td>2013–2015</td></tr>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/snapchat-client-php">snapchat-client-php</a></th><td>A Snapchat web client built on the old private API</td><td>2014–2015</td></tr>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/pokes-social-network-php">pokes-social-network-php</a></th><td>A small social network</td><td>2016</td></tr>
+        <tr><th scope="row"><a href="https://github.com/vladbondarenko97/android-notes">android-notes</a></th><td>A Pastebin-style Android app in Kotlin</td><td>2017</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="doc-end">
+    <h2>Check any of it</h2>
+    <p>Pick any row on this page and I'll walk you through the code, the decision and what I'd do differently.</p>
+    <p class="actions">
+      <a class="button" href="/#contact">Get in touch</a>
+      <a class="button quiet" href="https://github.com/vladbondarenko97" rel="me">GitHub</a>
+      <a class="button quiet" href="https://www.linkedin.com/in/vladbondarenko97/" rel="me">LinkedIn</a>
+    </p>
+  </section>
+</main>
+
+</body>
+</html>
