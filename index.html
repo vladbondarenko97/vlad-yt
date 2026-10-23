@@ -27,6 +27,9 @@
 <meta name="twitter:image" content="https://vlad.yt/assets/img/og.jpg">
 
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/vlad-bondarenko.jpg">
+<link rel="me" href="https://github.com/vladbondarenko97">
+<link rel="me" href="https://www.linkedin.com/in/vladbondarenko97/">
 <link rel="preload" href="assets/fonts/fraunces-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/schibsted-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
@@ -40,12 +43,27 @@
       "@id": "https://vlad.yt/#person",
       "name": "Vlad Bondarenko",
       "url": "https://vlad.yt/",
-      "image": "https://vlad.yt/assets/img/og.jpg",
+      "givenName": "Vlad",
+      "familyName": "Bondarenko",
+      "image": { "@type": "ImageObject", "url": "https://vlad.yt/assets/img/vlad-bondarenko.jpg", "width": 800, "height": 800 },
+      "email": "mailto:contactvlad1k@gmail.com",
+      "worksFor": { "@type": "Organization", "name": "Bausch + Lomb", "url": "https://www.bausch.com/" },
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "St. Louis Community College", "url": "https://stlcc.edu/" },
+      "hasOccupation": { "@type": "Occupation", "name": "QA Automation Engineer", "occupationLocation": { "@type": "City", "name": "St. Louis, MO" }, "skills": "Test automation, Playwright, Cypress, Selenium, Python, JavaScript, CI/CD, software verification, AI agent evaluation" },
       "jobTitle": "QA Automation Engineer and SDET",
       "description": "QA automation engineer and SDET testing regulated software and AI agents.",
-      "knowsAbout": ["Test automation", "Software quality assurance", "Playwright", "Python", "CI/CD", "Regulated software testing", "AI agent evaluation"],
+      "knowsAbout": ["Test automation", "Software quality assurance", "Software verification", "SDET", "Playwright", "Cypress", "Selenium", "Python", "CI/CD", "Regulated software testing", "AI agent evaluation"],
       "address": { "@type": "PostalAddress", "addressLocality": "St. Louis", "addressRegion": "MO", "addressCountry": "US" },
       "sameAs": ["https://github.com/vladbondarenko97", "https://www.linkedin.com/in/vladbondarenko97/"]
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://vlad.yt/#profile",
+      "url": "https://vlad.yt/",
+      "name": "Vlad Bondarenko | QA Automation Engineer & SDET",
+      "dateModified": "2026-10-23",
+      "mainEntity": { "@id": "https://vlad.yt/#person" },
+      "isPartOf": { "@id": "https://vlad.yt/#website" }
     },
     {
       "@type": "WebSite",
@@ -100,9 +118,13 @@
 
   <section class="stop hero" id="sun" data-stop>
     <div class="column">
+      <picture>
+        <source srcset="assets/img/vlad-bondarenko.webp" type="image/webp">
+        <img class="portrait" src="assets/img/vlad-bondarenko.jpg" alt="Vlad Bondarenko, QA automation engineer, at a surgical system test bench" width="800" height="800" fetchpriority="high">
+      </picture>
       <h1>Vlad Bondarenko</h1>
       <p class="lede">I test software that can't afford to fail: surgical devices, mortgage platforms, healthcare systems and, lately, AI agents.</p>
-      <p class="note">QA automation engineer and SDET in St. Louis. This page starts at the Sun and ends at the center of the Earth, with my work laid out along the way.</p>
+      <p class="note">QA automation engineer and SDET in St. Louis, MO. This page starts at the Sun and ends at the center of the Earth, with my work laid out along the way.</p>
       <p class="actions">
         <a class="button" href="#mercury">Start the descent</a>
         <a class="button quiet" href="assets/Vlad_Bondarenko_Resume.pdf">Read the résumé</a>
@@ -274,13 +296,13 @@
         <button class="copy" type="button" data-copy="contactvlad1k@gmail.com">Copy address</button>
       </p>
       <ul class="links">
-        <li><a href="https://github.com/vladbondarenko97">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/in/vladbondarenko97/">LinkedIn</a></li>
+        <li><a href="https://github.com/vladbondarenko97" rel="me">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/vladbondarenko97/" rel="me">LinkedIn</a></li>
         <li><a href="assets/Vlad_Bondarenko_Resume.pdf">Résumé (PDF)</a></li>
       </ul>
 
       <footer class="colophon">
-        <p>Every planet, cloud and lava flow on this page is drawn live by shader code. The only image file is a map of Earth's coastlines, and the layers inside the Earth sit at their real depths. Built with three.js and Claude Code.</p>
+        <p>Every planet, cloud and lava flow on this page is drawn live by shader code. The only image files are my photo and a map of Earth's coastlines, and the layers inside the Earth sit at their real depths. Built with three.js and Claude Code.</p>
         <p>© 2026 Vlad Bondarenko</p>
       </footer>
     </div>

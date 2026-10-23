@@ -116,3 +116,15 @@ test('no serious accessibility violations (axe, WCAG A/AA)', async ({ page }) =>
   const serious = violations.filter((v) => ['serious', 'critical'].includes(v.impact));
   expect(serious.map((v) => `${v.id}: ${v.help} (${v.nodes.length})`)).toEqual([]);
 });
+
+test('SEO: headshot loads, Person/ProfilePage JSON-LD is valid, profiles are rel=me', async ({ page, request }) => {
+  await page.goto(LOW);
+  const portrait = page.getByRole('img', { name: /^Vlad Bondarenko/ });
+  await expect(portrait).toBeVisible();
+  expect(await portrait.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+  const graph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent())['@graph'];
+  const person = graph.find((n) => n['@type'] === 'Person');
+  expect(graph.find((n) => n['@type'] === 'ProfilePage').mainEntity['@id']).toBe(person['@id']);
+  expect((await request.get(new URL(person.image.url).pathname)).status()).toBe(200);
+  for (const url of person.sameAs) await expect(page.locator(`a[rel~="me"][href="${url}"]`)).toHaveCount(1);
+});

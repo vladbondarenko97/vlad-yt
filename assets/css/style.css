@@ -338,3 +338,14 @@ h2 + .role { margin-top: 0.8rem; }
   #space { transition: none; }
   .button { transition: none; }
 }
+
+.portrait {
+  display: block;
+  width: clamp(5.5rem, 9vw, 8rem);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.6);
+  object-fit: cover;
+}
