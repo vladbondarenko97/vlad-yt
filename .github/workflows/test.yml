@@ -58,4 +58,6 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" index.html assets root@vlad.yt:/
       - name: Smoke test the live site
         if: steps.gate.outputs.enabled == 'true'
-        run: curl -fsS https://vlad.yt/ | grep -q "Vlad Bondarenko"
+        run: |
+          curl -fsS https://vlad.yt/ -o page.html
+          grep -q "Vlad Bondarenko" page.html
