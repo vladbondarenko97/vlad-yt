@@ -18,7 +18,7 @@ function watchErrors(page) {
 test('loads cleanly: right title, heading, no errors, no failed requests', async ({ page }) => {
   const problems = watchErrors(page);
   await page.goto('/');
-  await expect(page).toHaveTitle('Vlad Bondarenko');
+  await expect(page).toHaveTitle(/^Vlad Bondarenko \| QA Automation Engineer/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Vlad Bondarenko');
   await page.waitForLoadState('networkidle');
   expect(problems).toEqual([]);
