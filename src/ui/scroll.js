@@ -36,8 +36,6 @@ export function createScrollMap(sections) {
   window.addEventListener('resize', measure);
   window.addEventListener('load', measure);
   if (document.fonts?.ready) document.fonts.ready.then(measure);
-  // Late layout shifts (lazy content, slow font swaps on CI) would otherwise leave stale tops.
-  new ResizeObserver(measure).observe(document.body);
 
   return { measure, raw, eased };
 }

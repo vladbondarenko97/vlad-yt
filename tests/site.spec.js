@@ -33,6 +33,9 @@ test('every stop has a section, and every gauge link points at one', async ({ pa
 });
 
 test('scrolling moves the gauge: Sun at the top, Earth mid-way, Center at the bottom', async ({ page }) => {
+  // Reduced motion makes the gauge follow the scroll exactly. Otherwise the frame loop
+  // eases it over several frames, and software WebGL on CI renders one every 5-7 s.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(LOW);
   const place = page.locator('[data-gauge="place"]');
   await expect(place).toHaveText('Sun');
