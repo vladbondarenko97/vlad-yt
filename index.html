@@ -79,6 +79,8 @@
 </head>
 <body>
 
+<svg hidden><symbol id="gh-mark" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></symbol></svg>
+
 <a class="skip" href="#mercury">Skip the intro</a>
 
 <canvas id="space" aria-hidden="true" data-earth-mask="assets/img/earth-land.webp" data-earth-mask-local="assets/js/earth-land.data.js"></canvas>
@@ -181,7 +183,7 @@
           <div><dt>4 turns</dt><dd>down from 29</dd></div>
           <div><dt>$0.034</dt><dd>per task, down from $0.33</dd></div>
         </dl>
-        <a class="textlink" href="https://github.com/vladbondarenko97/take-the-wheel">Take the Wheel on GitHub</a>
+        <a class="gh-button" href="https://github.com/vladbondarenko97/take-the-wheel" aria-label="View on GitHub: Take the Wheel"><svg aria-hidden="true" viewBox="0 0 16 16"><use href="#gh-mark"/></svg>View on GitHub</a>
       </article>
 
       <article class="project">
@@ -197,7 +199,7 @@
           <div><dt>0</dt><dd>false positives, gated in CI</dd></div>
           <div><dt>−55%</dt><dd>model cost, same quality</dd></div>
         </dl>
-        <a class="textlink" href="https://github.com/vladbondarenko97/reqtrace">ReqTrace on GitHub</a>
+        <a class="gh-button" href="https://github.com/vladbondarenko97/reqtrace" aria-label="View on GitHub: ReqTrace"><svg aria-hidden="true" viewBox="0 0 16 16"><use href="#gh-mark"/></svg>View on GitHub</a>
       </article>
 
       <article class="project">
@@ -208,7 +210,23 @@
           <li>Built to be testable: any past run replays offline, and a missing input shows as “missing” with a reason instead of a placeholder number.</li>
           <li>More than 400 offline tests. Any network call in a test is an error, and CI runs the whole suite a second time with the clock 400 days ahead.</li>
         </ul>
-        <a class="textlink" href="https://github.com/vladbondarenko97/market-terminal">Market Terminal on GitHub</a>
+        <a class="gh-button" href="https://github.com/vladbondarenko97/market-terminal" aria-label="View on GitHub: Market Terminal"><svg aria-hidden="true" viewBox="0 0 16 16"><use href="#gh-mark"/></svg>View on GitHub</a>
+      </article>
+
+      <article class="project">
+        <h3>AnyPS5</h3>
+        <p class="kind">Open-source contribution to a PS5 compatibility layer, in C++, Python and CMake on macOS. Two pull requests, both merged by the maintainer.</p>
+        <ul>
+          <li>A PS5 title failed on macOS hosts. I traced it to two missing libkernel imports that stopped it at load, then to a crash on its first C++ exception, when the unwinder hit a call that wasn't implemented.</li>
+          <li>I implemented kqueue/kevent and <code>sceKernelGetModuleInfoFromAddr</code> for macOS.</li>
+          <li>I added guest regression tests and macOS unwind fixtures, and ran the full 712-test suite before review.</li>
+        </ul>
+        <dl class="figures">
+          <div><dt>2</dt><dd>pull requests merged</dd></div>
+          <div><dt>712</dt><dd>tests in the suite, all passing</dd></div>
+          <div><dt>macOS</dt><dd>host support for the failing title</dd></div>
+        </dl>
+        <p class="gh-row"><a class="gh-button" href="https://github.com/mugurc/AnyPS5/pull/7" aria-label="AnyPS5 pull request #7"><svg aria-hidden="true" viewBox="0 0 16 16"><use href="#gh-mark"/></svg>Pull request #7</a> <a class="gh-button" href="https://github.com/mugurc/AnyPS5/pull/8" aria-label="AnyPS5 pull request #8"><svg aria-hidden="true" viewBox="0 0 16 16"><use href="#gh-mark"/></svg>Pull request #8</a></p>
       </article>
 
       <p><a class="textlink" href="engineering/">The design decisions, root causes and test strategy behind these projects</a></p>
