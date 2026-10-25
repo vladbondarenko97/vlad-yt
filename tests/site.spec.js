@@ -91,7 +91,7 @@ test.describe('contact', () => {
     await page.getByLabel('Your email').fill('ada@example.com');
     await page.getByLabel('Message').fill('We should talk.');
     await page.getByRole('button', { name: 'Open email draft' }).click();
-    await expect(page.locator('[data-form-status]')).toContainText('contactvlad1k@gmail.com');
+    await expect(page.locator('[data-form-status]')).toContainText('vlad.bondarenko@icloud.com');
   });
 
   test('copy button puts the address on the clipboard', async ({ page, context, browserName }) => {
@@ -102,7 +102,7 @@ test.describe('contact', () => {
     const copy = page.locator('[data-copy]');
     await copy.click();
     await expect(copy).toHaveText('Copied');
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('contactvlad1k@gmail.com');
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('vlad.bondarenko@icloud.com');
   });
 });
 
